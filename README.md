@@ -2,12 +2,12 @@
 
 ### Build:
 ```
-gcc -c -Wall -Werror -fpic buffer.c
+gcc -I./include -c -Wall -Werror -fpic src/buffer.c
 gcc -L. -shared -o libbuffer.so buffer.o
-gcc -c -Wall -Werror -fpic com.c
+gcc -I./include -c -Wall -Werror -fpic src/com.c
 gcc -L. -shared -o libcom.so com.o
 
-gcc -I. -L. -o main main.c -lcom -lbuffer
+gcc -I./include -L. -o main main.c -lcom -lbuffer
 
 export LD_LIBRARY_PATH=$PROJECT_PATH:$LD_LIBRARY_PATH
 ```
