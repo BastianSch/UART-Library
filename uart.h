@@ -22,55 +22,53 @@
 #define UART_INT_TX     0x08 //transmit interrupt
 #define UART_INT_RX     0x04 //receive interrupt
 
-// fifo
-typedef struct 
+// buffer
+typedef struct sBufferClass
 {
     unsigned char data[UART_BUF_SIZE];  // array for data
     int size;                           // size of data array
     unsigned char read;                 // location of read pointer
     unsigned char write;                // location of write pointer
-} fifo_t; 
+    int (*empty)(struct sBufferClass *self);
+    int (*full)(struct sBufferClass *self);
+    int (*put)(struct sBufferClass *self, unsigned char byte);
+    int (*get)(struct sBufferClass *self, unsigned char *byte);
+} tBufferClass; 
 
 // uart interrupt hardware registers
-struct uart_int_reg
+typedef struct sIntRegister
 {  
     unsigned char intr_mask;   // interrupt mask
     unsigned char intr_status; // source of interrupts
     unsigned char intr_ack;    // interrupt acknowledge
-} uart_int_reg;
+} tIntRegister;
 
 // uart hardware registers
-struct uart_reg 
+typedef struct sRegister
 {
     unsigned int  control;  // serial configuration reg
     unsigned int  status;   // status
     unsigned char tx_data;  // transmit data (with hardware fifo!)
     unsigned char rx_data;  // rcv data (with hardware fifo!)
-} uart_reg;
+} tRegister;
 
-// uart interrupt subroutines
-void uart_rx(); // receive characters from uart register to fifo
-void uart_tx(); // write characters from fifo to uart register
-
-// mask values for fifo number
-#define TX_FIFO 0 //first fifo is for transmit data
-#define RX_FIFO 1 //second fifo is for receive data
-
-// instances of fifo
-fifo_t uart_buffers[2] =
+typedef struct sCommClass
 {
-    {.data={}, .size=UART_BUF_SIZE, .read=0, .write=0}, // first fifo for transmit
-    {.data={}, .size=UART_BUF_SIZE, .read=0, .write=0}  // second fifo for receive
-};
+    int (*send)(struct sCommClass *self, unsigned char *buf);
+    int (*read)(struct sCommClass *self, unsigned char *buf);
+    void (*tx)();
+    void (*rx)();
 
-extern void uart_init(void);
-extern int uart_send(unsigned char * buf);
-extern int uart_read(unsigned char * buf);
+    tBufferClass tx_buffer;
+    tBufferClass rx_buffer;
+    tRegister reg;
+    tIntRegister int_reg;
+} tCommClass;
 
-extern int fifo_empty(fifo_t *fifo);
-extern int fifo_full(fifo_t *fifo);
-extern int fifo_put(fifo_t *fifo, unsigned char byte);
-extern int fifo_get(fifo_t *fifo, unsigned char *byte);
+tCommClass uart;
+
+extern void uart_init(tCommClass *uart);
+extern void fifo_init(tBufferClass *fifo);
 
 #endif  // uart_h__
 
