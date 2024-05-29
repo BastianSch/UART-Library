@@ -1,13 +1,5 @@
 #include "buffer.h"
 
-typedef struct pBuffer
-{
-    unsigned char *data;  // array for data
-    int size;             // size of data array
-    unsigned char read;   // location of read pointer
-    unsigned char write;  // location of write pointer
-} pBuffer;
-
 //=============================================================================================
 // subroutine to check if fifo is empty
 static int fifo_empty(Buffer *fifo)

@@ -1,3 +1,6 @@
+#ifndef device_h__
+#define device_h__
+
 // addresses for uart registers
 #define UART_CONTROL    0x80030000
 #define UART_STATUS     0x80030002
@@ -18,3 +21,18 @@
 // mask values for uart interrupt register (mask, status and acknowledge)
 #define UART_INT_TX     0x08 //transmit interrupt
 #define UART_INT_RX     0x04 //receive interrupt
+
+reg_t uart_reg = {
+    .control =  (unsigned int)  UART_CONTROL,
+    .status =   (unsigned int)  UART_STATUS,
+    .tx_data =  (unsigned char) UART_TX_DATA,
+    .rx_data =  (unsigned char) UART_RX_DATA
+};
+
+intRegister_t uart_int_reg = {
+    .intr_mask =    (unsigned char) UART_INT_MASK,
+    .intr_status =  (unsigned char) UART_INT_STATUS,
+    .intr_ack =     (unsigned char) UART_INT_ACK
+};
+
+#endif  // device_h__

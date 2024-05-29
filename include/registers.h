@@ -1,5 +1,5 @@
-#ifndef device_h__
-#define device_h__
+#ifndef registers_h__
+#define registers_h__
 
 // hardware registers
 typedef struct s_Register
@@ -18,4 +18,4 @@ typedef struct sIntRegister
     unsigned char intr_ack;    // interrupt acknowledge
 } intRegister_t; 
 
-#endif  // device_h__
+#endif  // registers_h__

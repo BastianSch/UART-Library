@@ -12,3 +12,8 @@ libbuffer.so: buffer.o
 
 buffer.o:
 	gcc -I./include -c -Wall -Werror -fpic src/buffer.c
+
+clean:
+	rm -f main
+	rm -f libcom.so libbuffer.so
+	rm -f com.o buffer.o

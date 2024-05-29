@@ -1,14 +1,5 @@
 #include "com.h"
 
-typedef struct pCOM
-{
-    void (*tx)(struct COM *self);
-    void (*rx)(struct COM *self);
-
-    intRegister_t int_reg;
-    unsigned char UART_INT_TX;
-} pCOM;
-
 //=============================================================================================
 // application interface function for sending len characters from buf
 static int com_send(COM *com, unsigned char *buf)
@@ -24,23 +15,27 @@ static int com_send(COM *com, unsigned char *buf)
 
 //=============================================================================================
 // application interface function for reading characters to buf
-static int com_read(COM *com, unsigned char * buf)
+static int com_read(COM *com, unsigned char * buf, int length)
 {
+    int ret;
+
+    if(com->rx_buffer.empty(&com->rx_buffer))
+        return 1;
+    
     unsigned char c = '0';
-    int ret = 0;
-    while(*buf &&                                   // while length of buffer
-        !com->rx_buffer.empty(&com->rx_buffer))         // and receive buffer not empty
+    while(length--)                                  // while length of buffer
     {
         ret = com->rx_buffer.get(&com->rx_buffer, &c);  // get char from fifo
         if(ret)
-            *buf++ = c;                                 // write char to buffer
+            return 0;    
+        *buf++ = c;                                 // write char to buffer
     }
     return 0;
 }
 
 //=============================================================================================
 // application interface function: initialisiation of com
-COM * com_create(int buffer_size, void(*tx)(COM *), void(*rx)(COM *), intRegister_t int_reg, unsigned char UART_INT_TX)
+COM * com_create(int buffer_size, int(*tx)(COM *), int(*rx)(COM *), intRegister_t int_reg, unsigned char UART_INT_TX)
 {
     COM * com = malloc(sizeof(com));
     com->_pCOM = malloc(sizeof(pCOM));

@@ -15,6 +15,15 @@ typedef struct Buffer
     struct pBuffer * _pBuffer;
 } Buffer;
 
+// private variables and functions
+typedef struct pBuffer
+{
+    unsigned char *data;  // array for data
+    int size;             // size of data array
+    unsigned char read;   // location of read pointer
+    unsigned char write;  // location of write pointer
+} pBuffer;
+
 //=============================================================================================
 // application interface buffer constructor
 extern Buffer * buffer_create(int size);
