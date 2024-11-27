@@ -1,11 +1,15 @@
 # UART Lib
 
+Abstract Communication Layer written in C
+
 ### Build:
+
 ```
 make
 ```
 
 ### Test:
+
 ```
 sudo apt-get install libcunit1 libcunit1-doc libcunit1-dev
 gcc -I. -L. -o test_buffer test_buffer.c -lcunit -lbuffer
@@ -13,6 +17,7 @@ gcc -I. -L. -o test_buffer test_buffer.c -lcunit -lbuffer
 ```
 
 ### Run:
+
 ```
 export LD_LIBRARY_PATH=$PROJECT_PATH:$LD_LIBRARY_PATH
 
